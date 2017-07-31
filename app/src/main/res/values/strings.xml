@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">NMMU Walker</string>
+    <string name="action_setting">More</string>
+    <string name="vertical_ellipsis">&#8942;</string>
+    <string name="title_activity_directory">Directory</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_three_tab">ThreeTabActivity</string>
+    <string name="specify_your_current_and_destination_location">Specify your current and destination location</string>
+    <string name="destination">Destination</string>
+    <string name="current">Current</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+    <string name="process">Process</string>
+    <string name="make_sure_the_door_number_fits_within_the_view_below">Make sure the door number fits within the view below</string>
+    <string name="confirm">Confirm</string>
+    <string name="door_number">Door Number</string>
+</resources>

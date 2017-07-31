@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingStart="16dp" android:paddingEnd="16dp">
+
+    <TextView
+    android:id="@+id/venue_detailed_id_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="{Building_Floor_Door}" />
+
+    <TextView
+        android:id="@+id/venue_detailed_type_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="{Type}" />
+
+    <TextView
+        android:id="@+id/venue_detailed_alternative_door_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="{Building_Floor_Door}" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" android:paddingTop="10dp">
+
+        <Button
+            android:id="@+id/btn_venue_detailed_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set" />
+
+        <Button
+            android:id="@+id/btn_venue_detailed_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

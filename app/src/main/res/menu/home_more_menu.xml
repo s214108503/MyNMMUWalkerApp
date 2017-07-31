@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Settings, should always be in the overflow -->
+    <item android:title="Directory"
+        android:id="@+id/menu_item_directory" />
+    <item android:title="CMS"
+        android:id="@+id/menu_item_cms" />
+    <item android:title="User Settings"
+        android:id="@+id/menu_item_user_settings" />
+</menu>

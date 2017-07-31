@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingRight="16dp"
+    android:paddingLeft="16dp">
+
+    <ImageView
+        android:id="@+id/staff_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/noface" />
+
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingLeft="10dp">
+
+        <TextView
+            android:text="{Name Surname}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/staff_full_name_text_view" />
+        <TextView
+            android:text="{Department}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/staff_department_text_view" />
+        <TextView
+            android:text="{Office Number}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/staff_office_number_text_view" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/staff_favourite_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:srcCompat="@android:drawable/btn_star" />
+
+</LinearLayout>
