@@ -30,7 +30,7 @@ public class Tab3Fragment extends Fragment {
 
     private ArrayList<POI> pois;
     private ListView listView;
-    private POIAdapter adapter;
+    public POIAdapter adapter;
 
     public interface OnPOILocationSetInterface{
         void poiLocationPasserMethod(String poi_id);

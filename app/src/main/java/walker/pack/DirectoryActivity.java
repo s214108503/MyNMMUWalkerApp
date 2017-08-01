@@ -66,7 +66,6 @@ public class DirectoryActivity extends AppCompatActivity implements
 
     private void searchData(String query){
             if (adapter.getCount() > 0) {
-                Toast.makeText(this, "new text: " + query, Toast.LENGTH_SHORT).show();
                 switch (view_pager.getCurrentItem()) {
                     case 0:
                         // staff
@@ -74,9 +73,15 @@ public class DirectoryActivity extends AppCompatActivity implements
                         staff_frag.adapter.getFilter().filter(query);
                         adapter.notifyDataSetChanged();
                         break;
-                    default:
-                        Toast.makeText(this, "new text:" + query, Toast.LENGTH_SHORT).show();
+                    case 1:
+                        Tab2Fragment venue_frag = (Tab2Fragment) adapter.getItem(view_pager.getCurrentItem());
+                        venue_frag.adapter.getFilter().filter(query);
+                        adapter.notifyDataSetChanged();
                         break;
+                    case 2:
+                        Tab3Fragment poi_frag = (Tab3Fragment) adapter.getItem(view_pager.getCurrentItem());
+                        poi_frag.adapter.getFilter().filter(query);
+                        adapter.notifyDataSetChanged();
                 }
             }
     }

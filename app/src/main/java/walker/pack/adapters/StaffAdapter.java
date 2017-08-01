@@ -23,7 +23,7 @@ import walker.pack.classes.Staff;
 
 public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
 
-    private ArrayList<Staff> staffArrayList;
+    private ArrayList<Staff> staffArrayList, clonedStaffList;
     Context context;
 
     private Filter staffSurnameFilter;
@@ -40,6 +40,8 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
         super(context, R.layout.staff_row_layout, data);
         this.context = context;
         this.staffArrayList = data;
+        clonedStaffList = new ArrayList<>();
+        clonedStaffList.addAll(data);
 
         staffSurnameFilter = new Filter() {
             @Override
@@ -47,11 +49,20 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
                 FilterResults filter_results = new FilterResults();
                     ArrayList<Staff> temp_list = new ArrayList<>();
                     if (constraint != null && staffArrayList != null) {
+                        // Update list as user clicks backspace
+                        if (clonedStaffList.size() >= staffArrayList.size()) {
+                            staffArrayList.clear();
+                            staffArrayList.addAll(clonedStaffList);
+                        }
+
                         for (int x = 0; x < staffArrayList.size(); x++) {
                             Staff cur = getItem(x);
                             assert cur != null;
-                            if (cur.getSurname().toLowerCase().contains(String.valueOf(constraint).toLowerCase()))
+                            int constraint_index = cur.getSurname().toLowerCase().indexOf(String.valueOf(constraint).toLowerCase());
+                            if (constraint_index != -1)
                                 temp_list.add(cur);
+                            else
+                                staffArrayList.clear();
                         }
                         filter_results.values = temp_list;
                         filter_results.count = temp_list.size();
@@ -68,7 +79,6 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
                         notifyDataSetChanged();
                     } catch (ClassCastException e) {
                         e.printStackTrace();
-
                     }
                 } else {
                     notifyDataSetInvalidated();
@@ -129,15 +139,9 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
     public Filter getFilter() {
         return staffSurnameFilter;
     }
+
     public void setStaffArrayList(ArrayList<Staff> staffArrayList) {
         this.staffArrayList.clear();
         this.staffArrayList.addAll(staffArrayList);
     }
-
-    private ArrayList<Staff> clonedList(){
-        ArrayList<Staff> temp = new ArrayList<>();
-        temp.addAll(staffArrayList);
-        return temp;
-    }
-
 }
