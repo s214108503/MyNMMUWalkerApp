@@ -91,4 +91,9 @@ public class Venue implements Serializable {
     public void setAlternative_Doors(String[] alternative_Doors) {
         Alternative_Doors = alternative_Doors;
     }
+
+    public String getBuildingFloorDoorID()
+    {
+        return (Building_Number+"_"+Floor_Number+"_"+Door_ID);
+    }
 }

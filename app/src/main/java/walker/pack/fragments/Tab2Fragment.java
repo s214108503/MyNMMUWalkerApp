@@ -29,7 +29,7 @@ public class Tab2Fragment extends Fragment {
 
     private ArrayList<Venue> venues;
     private ListView listView;
-    private VenueAdapter adapter;
+    public VenueAdapter adapter;
 
     public interface OnVenueSetInterface{
         void venueLocationPasserMethod(String venue_id);
