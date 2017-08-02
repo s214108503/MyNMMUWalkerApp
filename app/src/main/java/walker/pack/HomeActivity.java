@@ -1,9 +1,13 @@
 package walker.pack;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,11 +33,26 @@ public class HomeActivity extends AppCompatActivity {
 
     public static DatabaseHelper db;
 
+    public static final int SET_GPS_LOCATION_ACCESS = 6;
+
+    public static String[] PERMISSIONS_ACCESS_GPS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    public void verifyStoragePermissions(Activity activity){
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (permission != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(activity,
+                    PERMISSIONS_ACCESS_GPS, SET_GPS_LOCATION_ACCESS);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        verifyStoragePermissions(this);
 
         ImageView img_view_home_navigate = (ImageView) findViewById(R.id.img_view_home_navigate);
         img_view_home_navigate.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +98,12 @@ public class HomeActivity extends AppCompatActivity {
         db.addPOI(new POI("poi1", "15", "02", "9", "", "COMPUTER SCIENCES", "THE GOTO PERSON"));
         db.addPOI(new POI("poi2", "", "", "9", "", "BUILDING", "Embizweni building"));
         db.addPOI(new POI("poi3", "", "", "", "qr1", "TELEPHONE", "Telkom telephone"));
+        db.addPOI(new POI("poi4", "", "", "35", "", "BUILDING", "Building 35"));
+        db.addPOI(new POI("poi5", "", "", "123", "", "BUILDING", "Building 123"));
+
+        db.addFavStaff(db.getStaffMember("cschd"));
+        db.addFavVenue(db.getVenue("37", "02", "9"));
+        db.addFavPOI(db.getPOI("poi4"));
         // =========================================================================================
     }
 

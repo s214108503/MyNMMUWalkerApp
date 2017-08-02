@@ -78,4 +78,20 @@ public class POI implements Serializable {
     public void setDescription(String description) {
         Description = description;
     }
+
+    public String determinePOIKind(){
+        if (!QR_ID.isEmpty())
+            return "qr_code";
+        else
+            if (!Door_ID.isEmpty())
+                return "venue";
+            else
+                if (!Building_Number.isEmpty())
+                    return "building";
+        return "";
+    }
+
+    public String getBuildingFloorDoorID(){
+        return Building_Number+"_"+Floor_Level+"_"+Door_ID;
+    }
 }

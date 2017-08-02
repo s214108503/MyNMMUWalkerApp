@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="QR Code"
+        android:id="@+id/outdoor_qr_code_menu_item" />
+    <item android:title="Door Number"
+        android:id="@+id/outdoor_door_number_menu_item" />
+    <item android:title="Show Favourites"
+        android:checkable="true"
+        android:id="@+id/outdoor_show_favourites_menu_item" />
+    <item android:title="Show POIs"
+        android:checkable="true"
+        android:id="@+id/outdoor_show_poi_menu_item" />
+</menu>

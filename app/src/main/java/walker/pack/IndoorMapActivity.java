@@ -26,6 +26,7 @@ public class IndoorMapActivity extends AppCompatActivity {
     private IndoorQRCodeInterface listener = new IndoorQRCodeInterface() {
         @Override
         public void OnQRCodeCalled(String qr) {
+            // TODO use switch to cater for which floor plan to load
             animationView_layout_view.setBackgroundResource(R.drawable.b9_00);
             animationView_layout_view.drawDestination = true;
             Toast.makeText(IndoorMapActivity.this, "Goto level: "+the_id.substring(the_id.indexOf("_")+1, the_id.lastIndexOf("_")), Toast.LENGTH_LONG).show();

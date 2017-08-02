@@ -91,14 +91,10 @@ public class Tab3Fragment extends Fragment {
                 Button btn_poi_detailed_set = (Button) v.findViewById(R.id.btn_poi_detailed_set);
                 Button btn_poi_detailed_cancel = (Button) v.findViewById(R.id.btn_poi_detailed_cancel);
 
-                final String finalB_f_d = b_f_d;
                 btn_poi_detailed_set.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (finalB_f_d.length() > 0)
-                            listener.poiLocationPasserMethod(finalB_f_d);
-                        else
-                            listener.poiLocationPasserMethod(cur.getQR_ID());
+                        listener.poiLocationPasserMethod(cur.getPOI_ID());
                     }
                 });
 

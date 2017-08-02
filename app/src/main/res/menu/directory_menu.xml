@@ -6,6 +6,7 @@
     <item android:title="Door Number"
         android:id="@+id/directory_door_number_menu_item" />
     <item android:title="Show Favourites"
+        android:checkable="true"
         android:id="@+id/directory_show_favourites_menu_item" />
 
     <item

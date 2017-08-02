@@ -5,11 +5,13 @@
         android:id="@+id/indoor_map_qr_code_menu_item" />
     <item android:title="Door Number"
         android:id="@+id/indoor_map_door_number_menu_item" />
-    <item android:title="Show Favourites"
-        android:id="@+id/indoor_map_show_favourites_menu_item" />
-    <item android:title="Show POIs"
-        android:id="@+id/indoor_map_show_pois_menu_item" />
     <item android:title="Change floors"
         android:id="@+id/indoor_map_change_floors_menu_item" />
+    <item android:title="Show Favourites"
+        android:checkable="true"
+        android:id="@+id/indoor_map_show_favourites_menu_item" />
+    <item android:title="Show POIs"
+        android:checkable="true"
+        android:id="@+id/indoor_map_show_pois_menu_item" />
 
 </menu>
