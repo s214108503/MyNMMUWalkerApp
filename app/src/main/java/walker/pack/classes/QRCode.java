@@ -11,17 +11,7 @@ public class QRCode implements Serializable {
     private String Building_Number; //fk
     private String Description, Image_URL;
     private Double Latitude, Longitude;
-    private int Floor_Level;
-
-
-/*    public QRCode(String QR_ID, String description, String image_URL, Double latitude, Double longitude, int floor_Level) {
-        this.QR_ID = QR_ID;
-        Description = description;
-        Image_URL = image_URL;
-        Latitude = latitude;
-        Longitude = longitude;
-        Floor_Level = floor_Level;
-    }*/
+    private Integer Floor_Level;
 
     public QRCode(String QR_ID, String building_Number, String description, String image_URL, Double latitude, Double longitude, int floor_Level) {
         this.QR_ID = QR_ID;
@@ -88,5 +78,17 @@ public class QRCode implements Serializable {
 
     public void setFloor_Level(int floor_Level) {
         Floor_Level = floor_Level;
+    }
+
+    public String determineWhereQRCodeIs(){
+        if (Floor_Level != null)
+            return "indoor";
+        else
+        if (!Building_Number.isEmpty())
+            return "building";
+        else
+        if (Latitude != null && Longitude != null)
+            return "outdoor";
+        return "";
     }
 }

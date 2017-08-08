@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"
+        android:text="Make sure the QR Code fit inside the view below"
+        android:textAppearance="@style/TextAppearance.Design.Hint" android:layout_weight="0.02"/>
+
+    <SurfaceView
+        android:paddingTop="10dp"
+        android:id="@+id/qr_code_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="0.92" />
+
+    <Button
+        android:id="@+id/btn_qr_code_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.02"
+        android:text="@string/confirm"/>
+</LinearLayout>

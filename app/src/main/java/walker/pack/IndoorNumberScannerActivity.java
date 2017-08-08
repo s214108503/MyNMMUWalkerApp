@@ -2,6 +2,7 @@ package walker.pack;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -24,9 +25,10 @@ import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
 
+import walker.pack.interfaces.OCRDoorIDLocationUpdateInterface;
 import walker.pack.ocr.things.TextDetectorProcessor;
 
-public class IndoorNumberScannerActivity extends AppCompatActivity {
+public class IndoorNumberScannerActivity extends AppCompatActivity implements OCRDoorIDLocationUpdateInterface{
     final static String TAG = "DoorScannerAct";
 
     private SurfaceView door_number_surface_view;
@@ -49,8 +51,7 @@ public class IndoorNumberScannerActivity extends AppCompatActivity {
         btn_door_number_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Determine in which activity door_number_scanner was clicked
-
+                OnDoorIDScanned(door_number_edit_text.getText().toString());
             }
         });
 
@@ -135,7 +136,21 @@ public class IndoorNumberScannerActivity extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+    }
 
+    @Override
+    public void OnDoorIDScanned(String door_id) {
+        camera_src.stop();
+        // Update start location and display changes on indoor plan
+        // TODO Check if door id is valid
+        if (door_id.split("_").length == 3){
+            TripSetupActivity.Clear();
+            Intent intent = new Intent(IndoorNumberScannerActivity.this, IndoorMapActivity.class);
+            intent.putExtra("close_act", true);
+            setResult(RESULT_OK, intent);
+            TripSetupActivity.setStart_id(door_id);
+            finish();
         }
     }
 }

@@ -1,9 +1,13 @@
 package walker.pack;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,11 +33,26 @@ public class HomeActivity extends AppCompatActivity {
 
     public static DatabaseHelper db;
 
+    public static final int SET_GPS_LOCATION_ACCESS = 6;
+
+    public static String[] PERMISSIONS_ACCESS_GPS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    public void verifyStoragePermissions(Activity activity){
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (permission != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(activity,
+                    PERMISSIONS_ACCESS_GPS, SET_GPS_LOCATION_ACCESS);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        verifyStoragePermissions(this);
 
         ImageView img_view_home_navigate = (ImageView) findViewById(R.id.img_view_home_navigate);
         img_view_home_navigate.setOnClickListener(new View.OnClickListener() {
@@ -71,14 +90,33 @@ public class HomeActivity extends AppCompatActivity {
                 "Computer Sciences", "Summerstrand Campus (South)", "+27415042081",
                 "jean.greyling@mandela.ac.za", "http://cs.mandela.ac.za/CMSModules/Avatars/CMSPages/GetAvatar.aspx?avatarguid=3beca0cb-7d3d-4ab0-8c90-80ccb78a1a65"));
 
+        // QRCode(String QR_ID, String building_Number, String description, String image_URL, Double latitude, Double longitude, int floor_Level)
+
         db.addQRCode(new QRCode("qr1", "9", "QR Code for telephone",
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
                 200.0, 131.0, 0));
+
+        db.addQRCode(new QRCode("qr2", "9", "ENTRANCE",
+                "?", 159.0, 82.0, 0));
+
+        /*db.addQRCode(new QRCode("qr3", "9", "QR Code for telephone",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
+                200.0, 131.0, 0));
+
+        db.addQRCode(new QRCode("qr3", "9", "QR Code for telephone",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
+                200.0, 131.0, 0));*/
 
         //POI(String POI_ID, String door_ID, String floor_Level, String building_Number, String QR_ID, String type, String description)
         db.addPOI(new POI("poi1", "15", "02", "9", "", "COMPUTER SCIENCES", "THE GOTO PERSON"));
         db.addPOI(new POI("poi2", "", "", "9", "", "BUILDING", "Embizweni building"));
         db.addPOI(new POI("poi3", "", "", "", "qr1", "TELEPHONE", "Telkom telephone"));
+        db.addPOI(new POI("poi4", "", "", "35", "", "BUILDING", "Building 35"));
+        db.addPOI(new POI("poi5", "", "", "123", "", "BUILDING", "Building 123"));
+
+        db.addFavStaff(db.getStaffMember("cschd"));
+        db.addFavVenue(db.getVenue("37", "02", "9"));
+        db.addFavPOI(db.getPOI("poi4"));
         // =========================================================================================
     }
 

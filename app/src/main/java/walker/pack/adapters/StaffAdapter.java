@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import walker.pack.HomeActivity;
 import walker.pack.R;
 import walker.pack.classes.Staff;
 
@@ -25,6 +26,8 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
 
     private ArrayList<Staff> staffArrayList, clonedStaffList;
     Context context;
+
+    private boolean isFavourite;
 
     private Filter staffSurnameFilter;
 
@@ -42,6 +45,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
         this.staffArrayList = data;
         clonedStaffList = new ArrayList<>();
         clonedStaffList.addAll(data);
+        isFavourite = false;
 
         staffSurnameFilter = new Filter() {
             @Override
@@ -92,9 +96,9 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the data item for this position
-        Staff staff_member = getItem(position);
+        final Staff staff_member = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+        final ViewHolder viewHolder; // view lookup cache stored in tag
 
         final View result;
 
@@ -124,8 +128,34 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
         viewHolder.staff_office_number_text_view.setText(staff_member.getBuilding_Number() + "_" + staff_member.getFloor_Number() + "_" + staff_member.getDoor_ID());
         Picasso.with(getContext()).load(staff_member.getImage_URL()).into(viewHolder.staff_image_view);
 
-        //viewHolder.staff_favourite_image_view.setTag(position);
+        viewHolder.staff_favourite_image_view.setTag(position);
+
         // TODO cater for favourites
+        if (HomeActivity.db.getFavStaffIDs().contains(staff_member.getStaff_ID())){
+            viewHolder.staff_favourite_image_view.setImageResource(R.drawable.ic_favorite_black_24dp);
+            isFavourite = true;
+        } else {
+            viewHolder.staff_favourite_image_view.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            isFavourite = false;
+        }
+
+        viewHolder.staff_favourite_image_view.setOnClickListener(new View.OnClickListener() {
+            final ViewHolder final_view_holder = viewHolder;
+            final Staff s = staff_member;
+            @Override
+            public void onClick(View view) {
+                if (isFavourite){
+                    // remove from list and change icon
+                    HomeActivity.db.deleteFavStaff(s);
+                    final_view_holder.staff_favourite_image_view.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    setFavourite(false);
+                } else {
+                    HomeActivity.db.addFavStaff(s);
+                    final_view_holder.staff_favourite_image_view.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    setFavourite(true);
+                }
+            }
+        });
 
         // Return the completed view to render on screen
         return result;
@@ -143,5 +173,13 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
     public void setStaffArrayList(ArrayList<Staff> staffArrayList) {
         this.staffArrayList.clear();
         this.staffArrayList.addAll(staffArrayList);
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
     }
 }

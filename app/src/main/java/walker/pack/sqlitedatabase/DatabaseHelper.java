@@ -35,8 +35,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             table_building = "Building",
             table_QRCode = "QRCode", table_POI = "POI";
 
+    private static final String table_fav_staff = "Fav_Staff",
+            table_fav_venue = "Fav_Venue",
+            table_fav_poi = "Fav_POI";
 
     //=================================Table Columns names==========================================
+
+    private static final String Key_Fav_PK = "ID",
+            Key_Fav_Staff_ID = "Fav_Staff_ID",
+            Key_Fav_Venue_DoorID = "Fav_Venue_DoorID",
+            Key_Fav_Venue_Floor_Level = "Fav_Venue_Floor_Level",
+            Key_Fav_Venue_Building = "Fav_Venue_Building",
+            Key_Fav_POI_ID = "Fav_POI_ID";
+
     // Staff
     private static final String Key_Staff_ID = "Staff_ID" //pk
             ,Key_Door_ID = "Door_ID", //fk
@@ -172,21 +183,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " FOREIGN KEY(" + Key_POI_QR_ID + ") REFERENCES " + table_QRCode + "(" + Key_QR_QR_ID + ")"
                 + ")";
         sqLiteDatabase.execSQL(create_poi_table);
+
+        String create_fav_staff_table = "CREATE TABLE "+ table_fav_staff
+                + "("
+                + Key_Fav_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_Staff_ID + " REFERENCES " + table_staff + "("+Key_Staff_ID+")"
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_staff_table);
+
+        String create_fav_venue_table = "CREATE TABLE "+ table_fav_venue
+                + "("
+                + Key_Fav_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_Venue_DoorID + " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Door_ID+"), "
+                + Key_Fav_Venue_Floor_Level+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Floor_Number+"), "
+                + Key_Fav_Venue_Building+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Building_Number+") "
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_venue_table);
+
+        String create_fav_poi_table = "CREATE TABLE "+ table_fav_poi
+                + "("
+                + Key_Fav_PK + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_POI_ID + " TEXT REFERENCES " + table_POI + "("+Key_POI_POI_ID+")"
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_poi_table);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // TODO 18/07/2017 since we have multiple tables shouldn't we drop the entire database instead of individual tables?
         // Drop older table if existed
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_staff);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_POI);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_QRCode);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_venue);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_building);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_staff);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_venue);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_poi);
 
         // Create tables again
         onCreate(sqLiteDatabase);
-
     }
 
     //==============================================================================================
@@ -354,7 +389,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     //==============================================================================================
 
-    // TODO inspect this because it has multiple primary keys
     //==============================================================================================
     // CRUD Venue
     // Adds new venue
@@ -916,5 +950,145 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Closing database connection
         db.close();
     }
+    //==============================================================================================
+
+    //==============================================================================================
+    /*        String create_fav_staff_table = "CREATE TABLE "+ table_fav_staff
+                + "("
+                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_Staff_ID + " REFERENCES " + table_staff + "("+Key_Staff_ID+")"
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_staff_table);
+
+        String create_fav_venue_table = "CREATE TABLE "+ table_fav_venue
+                + "("
+                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_Venue_DoorID + " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Door_ID+"), "
+                + Key_Fav_Venue_Floor_Level+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Floor_Number+"), "
+                + Key_Fav_Venue_Building+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Building_Number+"), "
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_venue_table);
+
+        String create_fav_poi_table = "CREATE TABLE "+ table_fav_poi
+                + "("
+                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
+                + Key_Fav_POI_ID + " TEXT REFERENCES " + table_POI + "("+Key_POI_POI_ID+")"
+                + ")";
+        sqLiteDatabase.execSQL(create_fav_poi_table);*/
+    public void addFavStaff(Staff s) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Key_Fav_Staff_ID, s.getStaff_ID());
+
+        // Inserting Row
+        db.insert(table_fav_staff, null, values);
+
+        // Closing database connection
+        db.close();
+    }
+
+    public ArrayList<String> getFavStaffIDs() {
+        ArrayList<String> fav_staff = new ArrayList<>();
+        // Select all query
+        String query = "SELECT * FROM "+ table_fav_staff;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            do {
+                fav_staff.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        // close cursor after using it
+        cursor.close();
+        return fav_staff;
+    }
+
+    public void deleteFavStaff(Staff s) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String where_clause = Key_Fav_Staff_ID + " =? ";
+        String whereArgs[] = new String[] {s.getStaff_ID()};
+        db.delete(table_fav_staff, where_clause, whereArgs);
+        // Closing database connection
+        db.close();
+    }
+
+    public void addFavVenue(Venue v) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Key_Fav_Venue_DoorID, v.getDoor_ID());
+        values.put(Key_Fav_Venue_Floor_Level, v.getFloor_Number());
+        values.put(Key_Fav_Venue_Building, v.getBuilding_Number());
+        // Inserting Row
+        db.insert(table_fav_venue, null, values);
+        // Closing database connection
+        db.close();
+    }
+
+    public ArrayList<String> getFavVenueID() {
+        ArrayList<String> fav_venues = new ArrayList<>();
+        // Select all query
+        String query = "SELECT * FROM "+ table_fav_venue;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            do {
+                fav_venues.add(cursor.getString(1)+"_"+cursor.getString(2)+"_"+cursor.getString(3));
+            } while (cursor.moveToNext());
+        // close cursor after using it
+        cursor.close();
+        return fav_venues;
+    }
+
+    public void deleteFavVenue(Venue v) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String where_clause = Key_Fav_Venue_DoorID + " =? AND "
+                + Key_Fav_Venue_Floor_Level + " =? AND "
+                + Key_Fav_Venue_Building + " =?";
+        String whereArgs[] = new String[] {v.getDoor_ID(), v.getFloor_Number(), v.getBuilding_Number()};
+
+        db.delete(table_fav_venue, where_clause, whereArgs);
+
+        // Closing database connection
+        db.close();
+    }
+
+    public void addFavPOI(POI p) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Key_Fav_POI_ID, p.getPOI_ID());
+        // Inserting Row
+        db.insert(table_fav_poi, null, values);
+        // Closing database connection
+        db.close();
+    }
+
+    public ArrayList<String> getFavPOIIDs() {
+        ArrayList<String> fav_pois = new ArrayList<>();
+        // Select all query
+        String query = "SELECT * FROM "+ table_fav_poi;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            do {
+                fav_pois.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        // close cursor after using it
+        cursor.close();
+        return fav_pois;
+    }
+
+    public void deleteFavPoi(POI p) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String where_clause = Key_Fav_POI_ID + " =? ";
+        String whereArgs[] = new String[] {p.getPOI_ID()};
+
+        db.delete(table_fav_poi, where_clause, whereArgs);
+
+        // Closing database connection
+        db.close();
+    }
+
     //==============================================================================================
 }
