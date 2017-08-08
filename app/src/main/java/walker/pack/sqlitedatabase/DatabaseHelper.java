@@ -1003,7 +1003,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return fav_staff;
     }
 
-    public void delete_fav_Staff(Staff s) {
+    public void deleteFavStaff(Staff s) {
         SQLiteDatabase db = this.getWritableDatabase();
         String where_clause = Key_Fav_Staff_ID + " =? ";
         String whereArgs[] = new String[] {s.getStaff_ID()};
@@ -1039,7 +1039,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return fav_venues;
     }
 
-    public void delete_fav_Venue(Venue v) {
+    public void deleteFavVenue(Venue v) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         String where_clause = Key_Fav_Venue_DoorID + " =? AND "
@@ -1078,7 +1078,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return fav_pois;
     }
 
-    public void delete_fav_Poi(POI p) {
+    public void deleteFavPoi(POI p) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         String where_clause = Key_Fav_POI_ID + " =? ";

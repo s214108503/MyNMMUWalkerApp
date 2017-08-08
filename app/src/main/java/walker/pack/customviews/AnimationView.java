@@ -6,15 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.drawable.Drawable;
 import android.view.View;
-
-import java.util.ArrayList;
+import android.widget.Toast;
 
 import walker.pack.R;
 import walker.pack.TripSetupActivity;
 import walker.pack.classes.Cell;
-import walker.pack.interfaces.IndoorQRCodeInterface;
 
 /**
  * Created by s214108503 on 2017/06/26.
@@ -26,6 +23,7 @@ public class AnimationView extends View{
     public Path start_directions, end_directions;
 
     private Intent data;
+    String start_id;
 
     public boolean drawDestination = false;
 
@@ -37,6 +35,7 @@ public class AnimationView extends View{
         start_directions = new Path();
         end_directions = new Path();
         this.data = data;
+        start_id = data.getStringExtra("start_id");
 
         brown_paint_brush_fill.setColor(Color.rgb(165,42,42));
         brown_paint_brush_fill.setStyle(Paint.Style.FILL);
@@ -45,8 +44,18 @@ public class AnimationView extends View{
         brown_paint_brush_stroke.setStyle(Paint.Style.STROKE);
         brown_paint_brush_stroke.setStrokeWidth(10);
 
-        // TODO determine which floor plan to load
-        setBackgroundResource(R.drawable.b9_02);
+        if (start_id.indexOf("4_00") != -1) {
+            setBackgroundResource(R.drawable.b4_00);
+        } else if (start_id.indexOf("9_00") != -1) {
+            setBackgroundResource(R.drawable.b9_00);
+        } else if (start_id.indexOf("9_01") != -1) {
+            setBackgroundResource(R.drawable.b9_01);
+        } else if (start_id.indexOf("9_02") != -1) {
+            setBackgroundResource(R.drawable.b9_02);
+        } else {
+            Toast.makeText(context, "Floor plan not found", Toast.LENGTH_SHORT).show();
+            setBackgroundResource(R.color.colorBackground);
+        }
     }
 
     @Override
@@ -66,39 +75,41 @@ public class AnimationView extends View{
         // Get view width and height
         int view_width = getWidth(), view_height = getHeight();
 
-        Cell prev_cell = TripSetupActivity.start_path.get(0);//get first cell
-        float x = mapToNewInterval(prev_cell.getX()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_W, 0, view_width);
-        float y = mapToNewInterval(prev_cell.getY()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_H, 0, view_height);
+        Cell prev_cell = TripSetupActivity.getStart_path().get(0);//get first cell
+        float x = mapToNewInterval(prev_cell.getX()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+        float y = mapToNewInterval(prev_cell.getY()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
 
         start_directions.moveTo(x, y);
 
-        for (int cell_index = 1; cell_index < TripSetupActivity.start_path.size(); cell_index++){
-            Cell cur = TripSetupActivity.start_path.get(cell_index);
-            x = mapToNewInterval(cur.getX()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_W, 0, view_width);
-            y = mapToNewInterval(cur.getY()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_H, 0, view_height);
+        for (int cell_index = 1; cell_index < TripSetupActivity.getStart_path().size(); cell_index++){
+            Cell cur = TripSetupActivity.getStart_path().get(cell_index);
+            x = mapToNewInterval(cur.getX()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+            y = mapToNewInterval(cur.getY()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
 
             start_directions.lineTo(x, y);
-            start_directions.moveTo(x, y);
+            if (cell_index < TripSetupActivity.getStart_path().size()-1)
+                start_directions.moveTo(x, y);
         }
 
         boolean end_floor = data.getBooleanExtra("end_floor", false);
         // Check if there are directions for the destination node
 
         if (end_floor){
-            prev_cell = TripSetupActivity.end_path.get(0);
-            x = mapToNewInterval(prev_cell.getX()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_W, 0, view_width);
-            y = mapToNewInterval(prev_cell.getY()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_H, 0, view_height);
+            prev_cell = TripSetupActivity.getEnd_path().get(0);
+            x = mapToNewInterval(prev_cell.getX()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+            y = mapToNewInterval(prev_cell.getY()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
             end_directions.moveTo(x, y);
 
-            for (int cell_index = 1; cell_index < TripSetupActivity.end_path.size(); cell_index++){
-                Cell cur = TripSetupActivity.end_path.get(cell_index);
-                x = mapToNewInterval(cur.getX()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_W, 0, view_width);
-                y = mapToNewInterval(cur.getY()*TripSetupActivity.CELL_SIZE, 0, TripSetupActivity.MAIN_H, 0, view_height);
+            for (int cell_index = 1; cell_index < TripSetupActivity.getEnd_path().size(); cell_index++){
+                Cell cur = TripSetupActivity.getEnd_path().get(cell_index);
+                x = mapToNewInterval(cur.getX()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+                y = mapToNewInterval(cur.getY()*TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
 
                 end_directions.lineTo(x, y);
-                end_directions.moveTo(x, y);
-            }
+                if (cell_index < TripSetupActivity.getStart_path().size()-1)
+                    end_directions.moveTo(x, y);
 
+            }
         }
     }
 
@@ -107,7 +118,9 @@ public class AnimationView extends View{
     }
 
     public void clear(){
+        start_directions.rewind();
         start_directions.reset();
+        end_directions.rewind();
         end_directions.reset();
     }
 }

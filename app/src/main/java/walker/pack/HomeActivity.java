@@ -90,9 +90,22 @@ public class HomeActivity extends AppCompatActivity {
                 "Computer Sciences", "Summerstrand Campus (South)", "+27415042081",
                 "jean.greyling@mandela.ac.za", "http://cs.mandela.ac.za/CMSModules/Avatars/CMSPages/GetAvatar.aspx?avatarguid=3beca0cb-7d3d-4ab0-8c90-80ccb78a1a65"));
 
+        // QRCode(String QR_ID, String building_Number, String description, String image_URL, Double latitude, Double longitude, int floor_Level)
+
         db.addQRCode(new QRCode("qr1", "9", "QR Code for telephone",
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
                 200.0, 131.0, 0));
+
+        db.addQRCode(new QRCode("qr2", "9", "ENTRANCE",
+                "?", 159.0, 82.0, 0));
+
+        /*db.addQRCode(new QRCode("qr3", "9", "QR Code for telephone",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
+                200.0, 131.0, 0));
+
+        db.addQRCode(new QRCode("qr3", "9", "QR Code for telephone",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png",
+                200.0, 131.0, 0));*/
 
         //POI(String POI_ID, String door_ID, String floor_Level, String building_Number, String QR_ID, String type, String description)
         db.addPOI(new POI("poi1", "15", "02", "9", "", "COMPUTER SCIENCES", "THE GOTO PERSON"));

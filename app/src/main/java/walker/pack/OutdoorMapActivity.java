@@ -53,11 +53,11 @@ public class OutdoorMapActivity extends AppCompatActivity {
         boolean is_building = intent.getBooleanExtra("is_building", false);
 
         if (is_building) {
-            startPoint = new double[]{TripSetupActivity.STARTING_BUILDING.getLatitude(), TripSetupActivity.STARTING_BUILDING.getLongitude()};
-            endPoint = new double[]{TripSetupActivity.DESTINATION_BUILDING.getLatitude(), TripSetupActivity.DESTINATION_BUILDING.getLongitude()};
+            startPoint = new double[]{TripSetupActivity.getStartingBuilding().getLatitude(), TripSetupActivity.getStartingBuilding().getLongitude()};
+            endPoint = new double[]{TripSetupActivity.getStartingBuilding().getLatitude(), TripSetupActivity.getDestinationBuilding().getLongitude()};
         } else {
-            startPoint = new double[]{TripSetupActivity.STARTING_OUTDOOR_LOCATION.longitude,TripSetupActivity.STARTING_OUTDOOR_LOCATION.latitude};
-            endPoint = new double[]{TripSetupActivity.DESTINATION_OUTDOOR_LOCATION.longitude,TripSetupActivity.DESTINATION_OUTDOOR_LOCATION.latitude};
+            startPoint = new double[]{TripSetupActivity.getStartingOutdoorLocation().longitude,TripSetupActivity.getStartingOutdoorLocation().latitude};
+            endPoint = new double[]{TripSetupActivity.getDestinationOutdoorLocation().longitude,TripSetupActivity.getDestinationOutdoorLocation().latitude};
         }
 
         final MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -83,11 +83,8 @@ public class OutdoorMapActivity extends AppCompatActivity {
                 List<LngLat> points = new ArrayList<>();
                 for (ValhallaLocation v: route.getGeometry())
                     points.add(new LngLat(v.getLongitude(), v.getLatitude()));
-                map.drawRouteLine(points);
-
-                for (int x = 0; x < route.getRouteInstructions().size(); x++){
-                    Toast.makeText(OutdoorMapActivity.this, route.getRouteInstructions().get(x).toString(), Toast.LENGTH_LONG).show();
-                }
+                if (points.size() > 0)
+                    map.drawRouteLine(points);
             }
 
             @Override public void failure(int i) {

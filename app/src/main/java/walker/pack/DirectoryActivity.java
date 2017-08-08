@@ -47,13 +47,6 @@ public class DirectoryActivity extends AppCompatActivity implements
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(view_pager);
 
-        /*// Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            searchData(query);
-        }*/
-        //searchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -101,6 +94,16 @@ public class DirectoryActivity extends AppCompatActivity implements
         return true;
     }
 
+    private boolean isFavClicked = false;
+    // TODO boolean
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem favCheckable = menu.findItem(R.id.directory_show_favourites_menu_item);
+        favCheckable.setChecked(isFavClicked);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO 17/7/2017: handle action bar item clicks
@@ -111,11 +114,12 @@ public class DirectoryActivity extends AppCompatActivity implements
 
         switch (id){
             case R.id.directory_qr_code_menu_item:
+                startActivity(new Intent(getApplicationContext(), QRCodeScannerActivity.class));
                 Toast.makeText(this, "QR Code", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.directory_door_number_menu_item:
                 startActivity(new Intent(getApplicationContext(), IndoorNumberScannerActivity.class));
-                Toast.makeText(this, "Door number", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Door number", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.directory_show_favourites_menu_item:
                 Toast.makeText(this, "Show Favs", Toast.LENGTH_SHORT).show();

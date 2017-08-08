@@ -1,7 +1,6 @@
 package walker.pack.ocr.things;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 import android.widget.EditText;
 import android.widget.Toast;
