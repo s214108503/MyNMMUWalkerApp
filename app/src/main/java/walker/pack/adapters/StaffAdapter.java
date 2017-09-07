@@ -26,9 +26,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
 
     private ArrayList<Staff> staffArrayList, clonedStaffList;
     Context context;
-
     private boolean isFavourite;
-
     private Filter staffSurnameFilter;
 
     // view lookup cache
@@ -65,8 +63,6 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
                             int constraint_index = cur.getSurname().toLowerCase().indexOf(String.valueOf(constraint).toLowerCase());
                             if (constraint_index != -1)
                                 temp_list.add(cur);
-                            else
-                                staffArrayList.clear();
                         }
                         filter_results.values = temp_list;
                         filter_results.count = temp_list.size();
@@ -77,7 +73,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 assert filterResults != null;
-                if (filterResults.count > 0) {
+                if (filterResults.count >= 0) {
                     try {
                         setStaffArrayList((ArrayList<Staff>) filterResults.values);
                         notifyDataSetChanged();

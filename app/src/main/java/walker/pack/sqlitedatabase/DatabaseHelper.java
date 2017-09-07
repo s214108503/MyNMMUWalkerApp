@@ -1032,6 +1032,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst())
             do {
+                String sss = cursor.getString(0);
+                String ssss = cursor.getString(1);
+                String sssss = cursor.getString(2);
+                String ssssss = cursor.getString(3);
                 fav_venues.add(cursor.getString(1)+"_"+cursor.getString(2)+"_"+cursor.getString(3));
             } while (cursor.moveToNext());
         // close cursor after using it

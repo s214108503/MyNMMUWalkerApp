@@ -8,10 +8,12 @@ import android.widget.ArrayAdapter;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import walker.pack.HomeActivity;
 import walker.pack.R;
 import walker.pack.classes.Venue;
 
@@ -24,6 +26,7 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
     private  ArrayList<Venue> venueArrayList, clonedList;
     private Context context;
     private Filter venueNumberFilter;
+    private boolean isFavourite;
 
     public VenueAdapter(ArrayList<Venue> data, Context context){
         super(context, R.layout.venue_row_layout, data);
@@ -64,7 +67,7 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 assert filterResults != null;
-                if (filterResults.count > 0) {
+                if (filterResults.count >= 0) {
                     try {
                         setVenueList((ArrayList<Venue>) filterResults.values);
                         notifyDataSetChanged();
@@ -79,14 +82,15 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
     // view lookup cache
     private static class ViewHolder{
         TextView venue_id_text_view, venue_type_text_view;
+        ImageView venue_favourite_image_view;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the data item for this position
-        Venue venue = getItem(position);
+        final Venue venue = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         final View result;
 
         if (convertView == null) {
@@ -95,6 +99,7 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
             convertView = inflater.inflate(R.layout.venue_row_layout, parent, false);
             viewHolder.venue_id_text_view = (TextView) convertView.findViewById(R.id.venue_id_text_view);
             viewHolder.venue_type_text_view = (TextView) convertView.findViewById(R.id.venue_type_text_view);
+            viewHolder.venue_favourite_image_view = (ImageView) convertView.findViewById((R.id.venue_favourite_image_view));
             result = convertView;
             convertView.setTag(viewHolder);
         } else {
@@ -104,6 +109,28 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
         assert venue != null;
         viewHolder.venue_id_text_view.setText(venue.getBuilding_Number()+"_"+venue.getFloor_Number()+"_"+venue.getDoor_ID());
         viewHolder.venue_type_text_view.setText(venue.getType());
+        viewHolder.venue_favourite_image_view.setTag(position);
+
+        if (HomeActivity.db.getFavVenueID().contains(venue.getDoor_ID()+"_"+venue.getFloor_Number()+"_"+venue.getBuilding_Number())){
+            updateImageView(viewHolder, (isFavourite = true));
+        } else {
+            updateImageView(viewHolder, (isFavourite = false));
+        }
+
+        viewHolder.venue_favourite_image_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isFavourite){
+                    // remove from list and change icon
+                    HomeActivity.db.deleteFavVenue(venue);
+                    setFavourite(false);
+                } else {
+                    HomeActivity.db.addFavVenue(venue);
+                    setFavourite(true);
+                }
+                updateImageView(viewHolder, isFavourite);
+            }
+        });
 
         return result;
     }
@@ -115,5 +142,16 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
 
     public Filter getFilter(){
         return venueNumberFilter;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
+    private void updateImageView(ViewHolder viewholder, boolean fav){
+        if (fav)
+            viewholder.venue_favourite_image_view.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        else
+            viewholder.venue_favourite_image_view.setImageResource(R.drawable.ic_favorite_black_24dp);
     }
 }

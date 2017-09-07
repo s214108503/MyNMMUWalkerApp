@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/venue_id_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="{Building_Floor_Door}" />
+        <TextView
+            android:id="@+id/venue_type_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="{Type}" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/venue_id_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="{Building_Floor_Door}" />
-    <TextView
-        android:id="@+id/venue_type_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="{Type}" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:paddingTop="5dp">
+        <ImageView
+            android:id="@+id/venue_favourite_image_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 </LinearLayout>

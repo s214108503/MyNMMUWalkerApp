@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Filter;
 
 import java.util.ArrayList;
 
+import walker.pack.HomeActivity;
 import walker.pack.R;
 import walker.pack.classes.POI;
 
@@ -20,14 +22,16 @@ import walker.pack.classes.POI;
  * Created by Olebogeng Malope on 7/22/2017.
  */
 
-public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
+public class POIAdapter extends ArrayAdapter<POI> implements Filterable{
 
     Context context;
     private ArrayList<POI> poiArrayList, clonedList;
     private Filter typeFilter;
+    private boolean isFavourite;
 
     private class ViewHolder {
         TextView poi_type_text_view, poi_description_text_view;
+        ImageView poi_favourite_image_view;
     }
 
     public POIAdapter(ArrayList<POI> data, Context context) {
@@ -71,7 +75,7 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 assert filterResults != null;
-                if (filterResults.count > 0){
+                if (filterResults.count >= 0){
                     try{
                         setPoiArrayList((ArrayList<POI>) filterResults.values);
                         notifyDataSetChanged();
@@ -90,9 +94,9 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // get the data item for this position
-        POI poi = getItem(position);
-        ViewHolder viewHolder;
-        final View result;
+        final POI poi = getItem(position);
+        final ViewHolder viewHolder;
+        View result;
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -101,6 +105,7 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
             convertView = inflater.inflate(R.layout.poi_row_layout, parent, false);
             viewHolder.poi_type_text_view = (TextView) convertView.findViewById(R.id.poi_type_text_view);
             viewHolder.poi_description_text_view = (TextView) convertView.findViewById(R.id.poi_description_text_view);
+            viewHolder.poi_favourite_image_view = (ImageView) convertView.findViewById(R.id.poi_favourite_image_view);
             result = convertView;
             convertView.setTag(viewHolder);
         } else {
@@ -110,6 +115,30 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
         assert poi != null;
         viewHolder.poi_type_text_view.setText(poi.getType());
         viewHolder.poi_description_text_view.setText(poi.getDescription());
+        viewHolder.poi_favourite_image_view.setTag(position);
+
+        // TODO cater for favourites
+        if (HomeActivity.db.getFavPOIIDs().contains(poi.getPOI_ID())){
+            updateImageView(viewHolder, (isFavourite = true));
+        } else {
+            updateImageView(viewHolder, (isFavourite = false));
+        }
+
+        viewHolder.poi_favourite_image_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isFavourite){
+                    // remove from list and change icon
+                    HomeActivity.db.deleteFavPoi(poi);
+                    setFavourite(false);
+                } else {
+                    HomeActivity.db.addFavPOI(poi);
+                    setFavourite(true);
+                }
+                updateImageView(viewHolder, isFavourite);
+            }
+        });
+        updateImageView(viewHolder, isFavourite);
         return result;
     }
 
@@ -122,4 +151,14 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable {
         poiArrayList.addAll(list);
     }
 
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
+    private void updateImageView(ViewHolder viewholder, boolean fav){
+        if (fav)
+            viewholder.poi_favourite_image_view.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        else
+            viewholder.poi_favourite_image_view.setImageResource(R.drawable.ic_favorite_black_24dp);
+    }
 }
