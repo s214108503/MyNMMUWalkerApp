@@ -34,6 +34,6 @@ public class CMSActivity extends AppCompatActivity {
             }
         });
         cms_web_view.loadUrl("http://nmmuwalker.csdev.nmmu.ac.za/");
-        Toast.makeText(this, cms_web_view.getUrl(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, cms_web_view.getUrl(), Toast.LENGTH_SHORT).show();
     }
 }

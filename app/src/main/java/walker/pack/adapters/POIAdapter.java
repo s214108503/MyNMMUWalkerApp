@@ -90,6 +90,29 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable{
         };
     }
 
+    public void ShowFavouritesOnly(boolean showFavourites){
+        if (showFavourites){
+            if (poiArrayList != null){
+                if (clonedList.size() >= poiArrayList.size()) {
+                    poiArrayList.clear();
+                    poiArrayList.addAll(clonedList);
+                }
+                ArrayList<POI> temp = new ArrayList<>();
+                ArrayList<String> poi_ids = HomeActivity.db.getFavPOIIDs();
+                for (int i = 0; i < poiArrayList.size(); i++) {
+                    POI cur = poiArrayList.get(i);
+                    if (!poi_ids.contains(cur.getPOI_ID()))
+                        temp.add(cur);
+                }
+                setPoiArrayList(temp);
+                notifyDataSetChanged();
+            }
+        } else {
+            setPoiArrayList(clonedList);
+            notifyDataSetChanged();
+        }
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -117,7 +140,6 @@ public class POIAdapter extends ArrayAdapter<POI> implements Filterable{
         viewHolder.poi_description_text_view.setText(poi.getDescription());
         viewHolder.poi_favourite_image_view.setTag(position);
 
-        // TODO cater for favourites
         if (HomeActivity.db.getFavPOIIDs().contains(poi.getPOI_ID())){
             updateImageView(viewHolder, (isFavourite = true));
         } else {

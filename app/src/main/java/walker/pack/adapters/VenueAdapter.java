@@ -79,6 +79,28 @@ public class VenueAdapter extends ArrayAdapter<Venue> implements Filterable {
             }
         };
     }
+    public void ShowFavouritesOnly(boolean showFavourites){
+        if (showFavourites){
+            if (venueArrayList != null){
+                if (clonedList.size() >= venueArrayList.size()) {
+                    venueArrayList.clear();
+                    venueArrayList.addAll(clonedList);
+                }
+                ArrayList<Venue> temp = new ArrayList<>();
+                ArrayList<String> venue_ids = HomeActivity.db.getFavVenueID();
+                for (int i = 0; i < venueArrayList.size(); i++) {
+                    Venue cur = venueArrayList.get(i);
+                    if (!venue_ids.contains(cur.getDoor_ID()+"_"+cur.getFloor_Number()+"_"+cur.getBuilding_Number()))
+                        temp.add(cur);
+                }
+                setVenueList(temp);
+                notifyDataSetChanged();
+            }
+        } else {
+            setVenueList(clonedList);
+            notifyDataSetChanged();
+        }
+    }
     // view lookup cache
     private static class ViewHolder{
         TextView venue_id_text_view, venue_type_text_view;

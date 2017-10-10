@@ -6,11 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import walker.pack.classes.Building;
+import walker.pack.classes.Entrance;
 import walker.pack.classes.POI;
 import walker.pack.classes.QRCode;
 import walker.pack.classes.Staff;
@@ -27,17 +30,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int database_version = 1;
 
     // Database Name
-    private static final String database_name = "NMMUWalkerDB.db";
+    public static final String database_name = "NMMUWalkerDB.db";
 
     // Table names
     private static final String table_staff = "Staff",
             table_venue = "Venue",
             table_building = "Building",
-            table_QRCode = "QRCode", table_POI = "POI";
+            table_QRCode = "QRCode", table_POI = "POI", table_Entrance = "EntranceExit";
 
     private static final String table_fav_staff = "Fav_Staff",
             table_fav_venue = "Fav_Venue",
             table_fav_poi = "Fav_POI";
+
 
     //=================================Table Columns names==========================================
 
@@ -90,6 +94,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Key_POI_QR_ID = "QR_ID", // fk2
             Key_POI_Type = "Type",
             Key_POI_Description = "Description";
+
+    // EntranceExit
+    private static final String Key_Entrance_Building = "Building",
+            Key_Entrance_Floor = "Floor",
+            Key_Entrance_ID = "Door",
+            Key_Entrance_X = "x",
+            Key_Entrance_Y = "y",
+            Key_Entrance_Latitude = "Latitude",
+            Key_Entrance_Longitude = "Longitude";
     //==============================================================================================
 
 
@@ -101,6 +114,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+        String create_entrance_table = "CREATE TABLE "+ table_Entrance
+                +" ( "
+                +Key_Entrance_Building+" INTEGER NOT NULL, "
+                +Key_Entrance_Floor+" INTEGER NOT NULL, "
+                +Key_Entrance_ID+" TEXT NOT NULL, "
+                +Key_Entrance_X+" REAL NOT NULL, "
+                +Key_Entrance_Y+" REAL NOT NULL, "
+                +Key_Entrance_Latitude+" REAL, "
+                +Key_Entrance_Longitude+" REAL, "
+                + "PRIMARY KEY (" + Key_Entrance_Building + "," + Key_Entrance_Floor + "," + Key_Entrance_ID + "," + Key_Entrance_X + "," + Key_Entrance_Y +")"
+                + " )";
+        sqLiteDatabase.execSQL(create_entrance_table);
 
         // Create Building table
         String create_building_table = "CREATE TABLE " + table_building
@@ -219,6 +245,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_staff);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_venue);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_fav_poi);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table_Entrance);
 
         // Create tables again
         onCreate(sqLiteDatabase);
@@ -950,31 +977,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Closing database connection
         db.close();
     }
-    //==============================================================================================
 
     //==============================================================================================
-    /*        String create_fav_staff_table = "CREATE TABLE "+ table_fav_staff
-                + "("
-                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
-                + Key_Fav_Staff_ID + " REFERENCES " + table_staff + "("+Key_Staff_ID+")"
-                + ")";
-        sqLiteDatabase.execSQL(create_fav_staff_table);
-
-        String create_fav_venue_table = "CREATE TABLE "+ table_fav_venue
-                + "("
-                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
-                + Key_Fav_Venue_DoorID + " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Door_ID+"), "
-                + Key_Fav_Venue_Floor_Level+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Floor_Number+"), "
-                + Key_Fav_Venue_Building+ " TEXT REFERENCES " + table_venue+ "("+Key_Venue_Building_Number+"), "
-                + ")";
-        sqLiteDatabase.execSQL(create_fav_venue_table);
-
-        String create_fav_poi_table = "CREATE TABLE "+ table_fav_poi
-                + "("
-                + Key_Fav_PK + " INTEGER NOT PRIMARY KEY AUTOINCREMENT, "
-                + Key_Fav_POI_ID + " TEXT REFERENCES " + table_POI + "("+Key_POI_POI_ID+")"
-                + ")";
-        sqLiteDatabase.execSQL(create_fav_poi_table);*/
     public void addFavStaff(Staff s) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -1095,4 +1099,66 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //==============================================================================================
+
+    public void addEntrance(Entrance e) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Key_Entrance_Building, e.Building);
+        values.put(Key_Entrance_Floor, e.Floor);
+        values.put(Key_Entrance_ID, e.Door);
+        values.put(Key_Entrance_X, e.X);
+        values.put(Key_Entrance_Y, e.Y);
+        values.put(Key_Entrance_Latitude, e.Latitude);
+        values.put(Key_Entrance_Longitude, e.Longitude);
+        // Inserting Row
+        db.insert(table_Entrance, null, values);
+        // Closing database connection
+        db.close();
+    }
+
+    public ArrayList<Entrance> getEntrances() {
+        ArrayList<Entrance> temp = new ArrayList<>();
+        // Select all query
+        String query = "SELECT * FROM "+ table_Entrance;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            do {
+                temp.add(new Entrance(cursor.getInt(0), cursor.getInt(1), cursor.getString(3),
+                        cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5),
+                        cursor.getDouble(6)));
+            } while (cursor.moveToNext());
+        // close cursor after using it
+        cursor.close();
+        return temp;
+    }
+    public Entrance getEntranceByLocalXY(double x, double y){
+        ArrayList<Entrance> temp = getEntrances();
+        for (Entrance entrance: temp){
+            if (entrance.X==x && entrance.Y==y)
+                return entrance;
+        }
+        return null;
+    }
+    public Entrance getEntranceByLatLong(double lat, double lon){
+        for (Entrance entrance: getEntrances()){
+            if (entrance.Latitude==lat && entrance.Longitude==lon)
+                return entrance;
+        }
+        return null;
+    }
+    public Entrance getEntranceByBFD_ID(String s){
+        String[] arrayS = s.split("_");
+        for (Entrance entrance: getEntrances()){
+            if (entrance.Building.equals(Integer.valueOf(arrayS[0])) &&
+                    entrance.Floor.equals(Integer.valueOf(arrayS[1])) &&
+                    entrance.Door.equals(arrayS[2]))
+                return entrance;
+        }
+        return null;
+    }
+
+    //==============================================================================================
 }
+

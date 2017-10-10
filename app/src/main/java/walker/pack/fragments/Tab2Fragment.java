@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import walker.pack.DirectoryActivity;
 import walker.pack.HomeActivity;
 import walker.pack.R;
 import walker.pack.adapters.VenueAdapter;
@@ -52,6 +53,7 @@ public class Tab2Fragment extends Fragment {
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            AlertDialog alert;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Venue cur = adapter.getItem(i);
@@ -67,14 +69,14 @@ public class Tab2Fragment extends Fragment {
                 TextView venue_detailed_type_text_view = (TextView) v.findViewById(R.id.venue_detailed_type_text_view);
                 TextView venue_detailed_alternative_door_text_view = (TextView) v.findViewById(R.id.venue_detailed_alternative_door_text_view);
 
-                venue_detailed_id_text_view.setText(cur.getBuilding_Number()+"_"+cur.getFloor_Number()+"_"+cur.getDoor_ID());
-                venue_detailed_type_text_view.setText(cur.getType());
+                venue_detailed_id_text_view.setText("Door ID: "+cur.getBuilding_Number()+"_"+cur.getFloor_Number()+"_"+cur.getDoor_ID());
+                venue_detailed_type_text_view.setText("Type: "+cur.getType());
                 String alt_doors = "";
 
                 for (String s: cur.getAlternative_Doors())
                     alt_doors += s + "\n";
 
-                venue_detailed_alternative_door_text_view.setText(alt_doors);
+                venue_detailed_alternative_door_text_view.setText("Alt Door ID: "+alt_doors);
 
                 Button btn_venue_detailed_set = (Button) v.findViewById(R.id.btn_venue_detailed_set);
                 Button btn_venue_detailed_cancel = (Button) v.findViewById(R.id.btn_venue_detailed_cancel);
@@ -83,6 +85,7 @@ public class Tab2Fragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         listener.venueLocationPasserMethod(cur.getBuilding_Number() + "_" + cur.getFloor_Number() + "_" + cur.getDoor_ID());
+                        alert.dismiss();
                     }
                 });
 
@@ -90,10 +93,16 @@ public class Tab2Fragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         listener.venueLocationPasserMethod(null);
+                        alert.dismiss();
                     }
                 });
 
-                AlertDialog alert = builder.create();
+                if (DirectoryActivity.opening_activity!=null && DirectoryActivity.opening_activity.equals("home")){
+                    ((ViewGroup)btn_venue_detailed_set.getParent()).removeView(btn_venue_detailed_set);
+                    ((ViewGroup)btn_venue_detailed_cancel.getParent()).removeView(btn_venue_detailed_cancel);
+                }
+
+                alert = builder.create();
                 alert.show();
             }
         });

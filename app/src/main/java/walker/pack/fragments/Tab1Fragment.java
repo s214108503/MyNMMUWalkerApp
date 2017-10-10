@@ -63,10 +63,10 @@ public class Tab1Fragment extends Fragment{
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            AlertDialog alert;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Staff cur = adapter.getItem(position);
-
                 if (cur != null) {
                     View v = LayoutInflater.from(getContext()).inflate(R.layout.staff_detailed_layout, null);
 
@@ -117,6 +117,7 @@ public class Tab1Fragment extends Fragment{
                         @Override
                         public void onClick(View view) {
                             listener.staffLocationPasserMethod(cur.getBuilding_Number() + "_" + cur.getFloor_Number() + "_" + cur.getDoor_ID());
+                            alert.dismiss();
                         }
                     });
 
@@ -124,13 +125,21 @@ public class Tab1Fragment extends Fragment{
                         @Override
                         public void onClick(View view) {
                             listener.staffLocationPasserMethod(null);
+                            alert.dismiss();
                         }
                     });
 
-                    AlertDialog alert = builder.create();
+
+                    if (DirectoryActivity.opening_activity!=null && DirectoryActivity.opening_activity.equals("home")){
+                        ((ViewGroup)btn_staff_detailed_set.getParent()).removeView(btn_staff_detailed_set);
+                        ((ViewGroup)btn_staff_detailed_cancel.getParent()).removeView(btn_staff_detailed_cancel);
+                    }
+
+                    alert = builder.create();
                     alert.show();
                 }
             }
+
         });
 
         return view;
@@ -149,5 +158,9 @@ public class Tab1Fragment extends Fragment{
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
 
+    }
 }

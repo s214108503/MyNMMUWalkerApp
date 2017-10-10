@@ -7,12 +7,21 @@
     android:layout_height="match_parent"
     tools:context="walker.pack.IndoorMapActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <view
+        class="walker.pack.customviews.AnimationView"
+        android:id="@+id/animation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <include
+        layout="@layout/indoor_location_section_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:color/holo_blue_bright"
-        android:id="@+id/imageView"
+        android:visibility="visible"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+    <include
+        layout="@layout/indoor_instructions_section_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

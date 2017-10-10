@@ -87,6 +87,29 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
         };
     }
 
+    public void ShowFavouritesOnly(boolean showFavourites){
+        if (showFavourites){
+            if (staffArrayList != null){
+                if (clonedStaffList.size() >= staffArrayList.size()) {
+                    staffArrayList.clear();
+                    staffArrayList.addAll(clonedStaffList);
+                }
+                ArrayList<Staff> temp = new ArrayList<>();
+                ArrayList<String> staff_ids = HomeActivity.db.getFavStaffIDs();
+                for (int i = 0; i < staffArrayList.size(); i++) {
+                    Staff cur = staffArrayList.get(i);
+                    if (staff_ids.contains(cur.getStaff_ID()))
+                        temp.add(cur);
+                }
+                setStaffArrayList(temp);
+                notifyDataSetChanged();
+            }
+        } else {
+            setStaffArrayList(clonedStaffList);
+            notifyDataSetChanged();
+        }
+    }
+
     private int lastPosition = -1;
 
     @Override
@@ -126,7 +149,6 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
 
         viewHolder.staff_favourite_image_view.setTag(position);
 
-        // TODO cater for favourites
         if (HomeActivity.db.getFavStaffIDs().contains(staff_member.getStaff_ID())){
             viewHolder.staff_favourite_image_view.setImageResource(R.drawable.ic_favorite_black_24dp);
             isFavourite = true;

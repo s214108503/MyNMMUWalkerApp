@@ -18,7 +18,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity" android:configChanges="orientation"
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,13 +30,14 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".IndoorMapActivity">
-        </activity>
+            android:configChanges="orientation"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity android:name=".IndoorMapActivity" />
         <activity
             android:name=".DirectoryActivity"
-            android:label="@string/title_activity_directory" android:configChanges="orientation"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_directory"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -46,28 +49,66 @@
         </activity>
         <activity
             android:name=".ThreeTabActivity"
-            android:label="@string/title_activity_directory" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation"
+            android:label="@string/title_activity_directory"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TripSetupActivity"
-            android:label="Trip Setup" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation"
+            android:label="Trip Setup"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="orc, barcode" />
 
-        <activity android:name=".IndoorNumberScannerActivity" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".OutdoorMapActivity" android:configChanges="orientation"
-            android:screenOrientation="portrait">
+        <activity
+            android:name=".IndoorNumberScannerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OutdoorMapActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".QRCodeActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".QRCodeScannerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CMSActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".UserSettingsActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
-        <activity android:name=".QRCodeActivity" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".QRCodeScannerActivity" android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".CMSActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service
+            android:name=".firebaseclasses.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".firebaseclasses.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/studentwalking" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
     </application>
 
 </manifest>

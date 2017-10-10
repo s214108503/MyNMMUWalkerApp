@@ -22,10 +22,10 @@
         android:layout_height="300dp"
         android:layout_weight="0.92" />
 
-    <Button
-        android:id="@+id/btn_qr_code_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.02"
-        android:text="@string/confirm"/>
+    <!--<Button-->
+        <!--android:id="@+id/btn_qr_code_confirm"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="0.02"-->
+        <!--android:text="@string/confirm"/>-->
 </LinearLayout>

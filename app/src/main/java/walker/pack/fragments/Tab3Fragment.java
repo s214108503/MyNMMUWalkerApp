@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import walker.pack.DirectoryActivity;
 import walker.pack.HomeActivity;
 import walker.pack.R;
 import walker.pack.adapters.POIAdapter;
@@ -51,6 +52,7 @@ public class Tab3Fragment extends Fragment {
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            AlertDialog alert;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final POI cur = adapter.getItem(i);
@@ -76,17 +78,17 @@ public class Tab3Fragment extends Fragment {
                     b_f_d += "_" + cur.getDoor_ID();
 
                 if (b_f_d.length() > 0)
-                    poi_detailed_building_floor_door_text_view.setText(b_f_d);
+                    poi_detailed_building_floor_door_text_view.setText("ID: "+b_f_d);
                 else
-                    poi_detailed_building_floor_door_text_view.setVisibility(View.INVISIBLE);
+                    poi_detailed_building_floor_door_text_view.setVisibility(View.GONE);
 
                 if (cur.getQR_ID().length() > 0)
-                    poi_detailed_qr_code_text_view.setText(cur.getQR_ID());
+                    poi_detailed_qr_code_text_view.setText("QR Code ID"+cur.getQR_ID());
                 else
-                    poi_detailed_qr_code_text_view.setVisibility(View.INVISIBLE);
+                    poi_detailed_qr_code_text_view.setVisibility(View.GONE);
 
-                poi_detailed_Type_text_view.setText(cur.getType());
-                poi_detailed_description_text_view.setText(cur.getDescription());
+                poi_detailed_Type_text_view.setText("Type: "+cur.getType()); // TYPE
+                poi_detailed_description_text_view.setText("Description: "+cur.getDescription()); // DESCRIPTION
 
                 Button btn_poi_detailed_set = (Button) v.findViewById(R.id.btn_poi_detailed_set);
                 Button btn_poi_detailed_cancel = (Button) v.findViewById(R.id.btn_poi_detailed_cancel);
@@ -95,6 +97,7 @@ public class Tab3Fragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         listener.poiLocationPasserMethod(cur.getPOI_ID());
+                        alert.dismiss();
                     }
                 });
 
@@ -102,10 +105,16 @@ public class Tab3Fragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         listener.poiLocationPasserMethod(null);
+                        alert.dismiss();
                     }
                 });
 
-                AlertDialog alert = builder.create();
+                if (DirectoryActivity.opening_activity!=null && DirectoryActivity.opening_activity.equals("home")){
+                    ((ViewGroup)btn_poi_detailed_set.getParent()).removeView(btn_poi_detailed_set);
+                    ((ViewGroup)btn_poi_detailed_cancel.getParent()).removeView(btn_poi_detailed_cancel);
+                }
+
+                alert = builder.create();
                 alert.show();
             }
         });

@@ -8,6 +8,8 @@ import android.widget.Toast;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 
+import walker.pack.TripSetupActivity;
+
 /**
  * Created by s214108503 on 2017/07/24.
  */

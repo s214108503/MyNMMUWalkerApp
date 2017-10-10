@@ -3,11 +3,14 @@ package walker.pack;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +27,10 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import walker.pack.classes.Building;
+import walker.pack.classes.Venue;
 import walker.pack.interfaces.OCRDoorIDLocationUpdateInterface;
 import walker.pack.ocr.things.TextDetectorProcessor;
 
@@ -116,7 +122,12 @@ public class IndoorNumberScannerActivity extends AppCompatActivity implements OC
         });
 
         Intent data = getIntent();
-        final String building_floor_id = data.getStringExtra("building_floor_id");
+        String building_floor_id = data.getStringExtra("building_floor_id");
+        if (building_floor_id==null)
+            if (TripSetupActivity.start_id!=null)
+                building_floor_id = String.valueOf(TripSetupActivity.start_id);
+            else
+                building_floor_id = "9_02_37"; //default value
         textRecognizer.setProcessor(new TextDetectorProcessor(getApplicationContext(),door_number_edit_text, building_floor_id));
     }
 
@@ -141,16 +152,48 @@ public class IndoorNumberScannerActivity extends AppCompatActivity implements OC
 
     @Override
     public void OnDoorIDScanned(String door_id) {
-        camera_src.stop();
         // Update start location and display changes on indoor plan
         // TODO Check if door id is valid
-        if (door_id.split("_").length == 3){
-            TripSetupActivity.Clear();
+        boolean valid_building = false;
+        for (Venue v :HomeActivity.db.getVenues()){
+            if (v.getBuildingFloorDoorID().equals(door_id)){
+                valid_building = true;
+                break;
+            }
+        }
+
+        if (valid_building) {
             Intent intent = new Intent(IndoorNumberScannerActivity.this, IndoorMapActivity.class);
             intent.putExtra("close_act", true);
             setResult(RESULT_OK, intent);
-            TripSetupActivity.setStart_id(door_id);
+            TripSetupActivity.setStart_id(door_id); // only change starting node values (destination should remain the same)
+            TripSetupActivity.setStart_model("venue");
             finish();
+        } else {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(IndoorNumberScannerActivity.this)
+                            .setTitle("Invalid door id")
+                            .setMessage("Make sure you enter a valid door id")
+                            .create()
+                            .show();
+                }
+            });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(IndoorNumberScannerActivity.this, IndoorMapActivity.class);
+        intent.putExtra("close_act", false);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

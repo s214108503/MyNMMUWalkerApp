@@ -27,26 +27,22 @@ public class DirectoryActivity extends AppCompatActivity implements
         SearchView.OnQueryTextListener{
 
     private static final String TAG = "ThreeTabActivity";
-
     private SectionsPageAdapter adapter;
-
     private ViewPager view_pager;
-
-    public static SearchView searchView;
+    private static SearchView searchView;
+    public static String opening_activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
-
         // set up the view pager with sections adapter
         view_pager = (ViewPager) findViewById(R.id.container);
         setupViewPager(view_pager);
-
         // tabs
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(view_pager);
-
+        opening_activity = getIntent().getStringExtra("opening_activity");
     }
 
     @Override
@@ -84,6 +80,14 @@ public class DirectoryActivity extends AppCompatActivity implements
         // inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.directory_menu, menu);
 
+        if (DirectoryActivity.opening_activity!=null && DirectoryActivity.opening_activity.equals("home")){
+            invalidateOptionsMenu();
+            MenuItem item1 = menu.findItem(R.id.directory_door_number_menu_item);
+            MenuItem item2 = menu.findItem(R.id.directory_qr_code_menu_item);
+            item1.setVisible(false);
+            item2.setVisible(false);
+        }
+
         // Retrieve the SearchView and plug it into SearchManager
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
@@ -95,7 +99,6 @@ public class DirectoryActivity extends AppCompatActivity implements
     }
 
     private boolean isFavClicked = false;
-    // TODO boolean
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -115,17 +118,39 @@ public class DirectoryActivity extends AppCompatActivity implements
         switch (id){
             case R.id.directory_qr_code_menu_item:
                 startActivity(new Intent(getApplicationContext(), QRCodeScannerActivity.class));
-                Toast.makeText(this, "QR Code", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.directory_door_number_menu_item:
                 startActivity(new Intent(getApplicationContext(), IndoorNumberScannerActivity.class));
                 //Toast.makeText(this, "Door number", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.directory_show_favourites_menu_item:
-                Toast.makeText(this, "Show Favs", Toast.LENGTH_SHORT).show();
+                isFavClicked = !isFavClicked;
+                handleShowFavourites(isFavClicked);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handleShowFavourites(boolean b){
+        if (adapter.getCount() > 0) {
+            switch (view_pager.getCurrentItem()) {
+                case 0:
+                    // staff
+                    Tab1Fragment staff_frag = (Tab1Fragment) adapter.getItem(view_pager.getCurrentItem());
+                    staff_frag.adapter.ShowFavouritesOnly(b);
+                    adapter.notifyDataSetChanged();
+                    break;
+                case 1:
+                    Tab2Fragment venue_frag = (Tab2Fragment) adapter.getItem(view_pager.getCurrentItem());
+                    venue_frag.adapter.ShowFavouritesOnly(b);
+                    adapter.notifyDataSetChanged();
+                    break;
+                case 2:
+                    Tab3Fragment poi_frag = (Tab3Fragment) adapter.getItem(view_pager.getCurrentItem());
+                    poi_frag.adapter.ShowFavouritesOnly(b);
+                    adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void setupViewPager(ViewPager viewPager){
@@ -133,7 +158,6 @@ public class DirectoryActivity extends AppCompatActivity implements
         adapter.addFragment(new Tab1Fragment(), "STAFF");
         adapter.addFragment(new Tab2Fragment(), "VENUE");
         adapter.addFragment(new Tab3Fragment(), "POI");
-
         viewPager.setAdapter(adapter);
     }
 

@@ -57,4 +57,12 @@ public class PlanNode implements Serializable {
                 ", Node_ID='" + Node_ID + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (((PlanNode)obj).getX()==this.getX() && ((PlanNode)obj).getY()==this.getY()){
+            return true;
+        }
+        return false;
+    }
 }
