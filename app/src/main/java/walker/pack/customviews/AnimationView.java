@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.shapes.PathShape;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -94,7 +95,7 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
         start_id = data.getStringExtra("start_id");
         green_flag_bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redflag16);
         red_flag_bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.greenflag16);
-        favourites_bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.heart16);
+        favourites_bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.iheart16);
         poi_bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pin16);
         brown_paint_brush_fill = new Paint();
         brown_paint_brush_stroke = new Paint();
@@ -111,9 +112,10 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
         brown_paint_brush_fill.setColor(Color.rgb(165, 42, 42));
         brown_paint_brush_fill.setStyle(Paint.Style.FILL);
 
-        brown_paint_brush_stroke.setColor(Color.rgb(165, 42, 42));
+        brown_paint_brush_stroke.setColor(Color.rgb(7, 180, 237));
+        //brown_paint_brush_stroke.setColor(Color.rgb(165, 42, 42));
         brown_paint_brush_stroke.setStyle(Paint.Style.STROKE);
-        brown_paint_brush_stroke.setStrokeWidth(10);
+        brown_paint_brush_stroke.setStrokeWidth(15);
 
 
         clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -147,66 +149,73 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+/*        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.WHITE);*/
+
         super.onDraw(canvas);
         this.mCanvas = canvas;
+
         int width = this.getDrawable().getIntrinsicWidth(), height = this.getDrawable().getIntrinsicHeight();
 
         /*canvas.translate(fPosX, fPosY);
         canvas.scale(fScale, fScale);*/
         canvas.setMatrix(matrix);
 
-        initialiseDirections();
-        // initially draw starting directions
-        if (!drawDestination) {
-            if (start_directions != null)
-                if (!start_directions.isEmpty()) {
-                    canvas.drawPath(start_directions, brown_paint_brush_stroke);
+        if (!clearCanvas) {
+            initialiseDirections();
+            // initially draw starting directions
+            if (!drawDestination) {
+                if (start_directions != null)
+                    if (!start_directions.isEmpty()) {
+                        canvas.drawPath(start_directions, brown_paint_brush_stroke);
 
-                    Cell start_cell = TripSetupActivity.getStart_path().get(0);
-                    float x = mapToNewInterval(start_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
-                    float y = mapToNewInterval(start_cell.getY() * TripSetupActivity.getCellSize() - red_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
-                    canvas.drawBitmap(red_flag_bitmap, x, y, null);
+                        Cell start_cell = TripSetupActivity.getStart_path().get(0);
+                        float x = mapToNewInterval(start_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
+                        float y = mapToNewInterval(start_cell.getY() * TripSetupActivity.getCellSize() - red_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
+                        canvas.drawBitmap(red_flag_bitmap, x, y, null);
 
 
-                    Cell end_cell = TripSetupActivity.getStart_path().get(TripSetupActivity.getStart_path().size() - 1);
-                    x = mapToNewInterval(end_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
-                    y = mapToNewInterval(end_cell.getY() * TripSetupActivity.getCellSize() - green_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
-                    canvas.drawBitmap(green_flag_bitmap, x, y, null);
-                }
-        } else {
-            if (end_directions != null)
-                if (!end_directions.isEmpty()) {
-                    canvas.drawPath(end_directions, brown_paint_brush_stroke);
+                        Cell end_cell = TripSetupActivity.getStart_path().get(TripSetupActivity.getStart_path().size() - 1);
+                        x = mapToNewInterval(end_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
+                        y = mapToNewInterval(end_cell.getY() * TripSetupActivity.getCellSize() - green_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
+                        canvas.drawBitmap(green_flag_bitmap, x, y, null);
+                    }
+            } else {
+                if (end_directions != null)
+                    if (!end_directions.isEmpty()) {
+                        canvas.drawPath(end_directions, brown_paint_brush_stroke);
 
-                    Cell start_cell = TripSetupActivity.getEnd_path().get(0);
-                    float x = mapToNewInterval(start_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
-                    float y = mapToNewInterval(start_cell.getY() * TripSetupActivity.getCellSize() - red_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
-                    canvas.drawBitmap(red_flag_bitmap, x, y, null);
+                        Cell start_cell = TripSetupActivity.getEnd_path().get(0);
+                        float x = mapToNewInterval(start_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
+                        float y = mapToNewInterval(start_cell.getY() * TripSetupActivity.getCellSize() - red_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
+                        canvas.drawBitmap(red_flag_bitmap, x, y, null);
 
-                    Cell end_cell = TripSetupActivity.getEnd_path().get(TripSetupActivity.getEnd_path().size() - 1);
-                    x = mapToNewInterval(end_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
-                    y = mapToNewInterval(end_cell.getY() * TripSetupActivity.getCellSize() - green_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
-                    canvas.drawBitmap(green_flag_bitmap, x, y, null);
-                }
-        }
-
-        if (drawFavourites){
-            float x;
-            float y;
-            for (Double[] xy: favourites){
-                x = mapToNewInterval((float) (xy[0] * TripSetupActivity.getCellSize() - 2), 0, TripSetupActivity.getMainW(), 0, width);
-                y = mapToNewInterval((float) (xy[1] * TripSetupActivity.getCellSize() - favourites_bitmap.getHeight() + (favourites_bitmap.getHeight()/2)), 0, TripSetupActivity.getMainH(), 0, height);
-                canvas.drawBitmap(favourites_bitmap, x, y, null);
+                        Cell end_cell = TripSetupActivity.getEnd_path().get(TripSetupActivity.getEnd_path().size() - 1);
+                        x = mapToNewInterval(end_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, width);
+                        y = mapToNewInterval(end_cell.getY() * TripSetupActivity.getCellSize() - green_flag_bitmap.getHeight() + 15, 0, TripSetupActivity.getMainH(), 0, height);
+                        canvas.drawBitmap(green_flag_bitmap, x, y, null);
+                    }
             }
-        }
 
-        if (drawPOIs) {
-            float x;
-            float y;
-            for (Double[] xy : pois) {
-                x = mapToNewInterval((float) (xy[0] * TripSetupActivity.getCellSize()), 0, TripSetupActivity.getMainW(), 0, width);
-                y = mapToNewInterval((float) (xy[1] * TripSetupActivity.getCellSize() - poi_bitmap.getHeight()), 0, TripSetupActivity.getMainH(), 0, height);
-                canvas.drawBitmap(poi_bitmap, x, y, null);
+            if (drawFavourites) {
+                float x;
+                float y;
+                for (Double[] xy : favourites) {
+                    x = mapToNewInterval((float) (xy[0] * TripSetupActivity.getCellSize() + 11), 0, TripSetupActivity.getMainW(), 0, width);
+                    y = mapToNewInterval((float) (xy[1] * TripSetupActivity.getCellSize() - favourites_bitmap.getHeight() ), 0, TripSetupActivity.getMainH(), 0, height);
+                    canvas.drawBitmap(favourites_bitmap, x, y, null);
+                }
+            }
+
+            if (drawPOIs) {
+                float x;
+                float y;
+                for (Double[] xy : pois) {
+                    x = mapToNewInterval((float) (xy[0] * TripSetupActivity.getCellSize()), 0, TripSetupActivity.getMainW(), 0, width);
+                    y = mapToNewInterval((float) (xy[1] * TripSetupActivity.getCellSize() - poi_bitmap.getHeight()), 0, TripSetupActivity.getMainH(), 0, height);
+                    canvas.drawBitmap(poi_bitmap, x, y, null);
+                }
             }
         }
 
@@ -221,33 +230,58 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
         float x = mapToNewInterval(prev_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
         float y = mapToNewInterval(prev_cell.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
 
-        start_directions.moveTo(x, y);
-
-        for (int cell_index = 1; cell_index < TripSetupActivity.getStart_path().size(); cell_index++) {
-            Cell cur = TripSetupActivity.getStart_path().get(cell_index);
-            x = mapToNewInterval(cur.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
-            y = mapToNewInterval(cur.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
-
-            start_directions.lineTo(x, y);
+        if (start_directions != null) {
             start_directions.moveTo(x, y);
+
+            for (int cell_index = 1; cell_index < TripSetupActivity.getStart_path().size(); cell_index++) {
+                Cell cur = TripSetupActivity.getStart_path().get(cell_index);
+                x = mapToNewInterval(cur.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+                y = mapToNewInterval(cur.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
+
+                if (cell_index < TripSetupActivity.getStart_path().size() - 1) {
+                    if (mapToNewInterval(TripSetupActivity.getStart_path().get(0).getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height)
+                            >= mapToNewInterval(TripSetupActivity.getStart_path().get(TripSetupActivity.getStart_path().size()-1).getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height)) {
+                        start_directions.lineTo(x + 5, y );
+                        start_directions.moveTo(x + 5, y );
+                    } else {
+                        start_directions.lineTo(x, y + 5);
+                        start_directions.moveTo(x, y + 5);
+                    }
+                } else {
+                    start_directions.lineTo(x, y);
+                    start_directions.moveTo(x, y);
+                }
+
+            }
+        } else {
+            start_directions = new Path();
         }
 
         boolean end_floor = data.getBooleanExtra("end_floor", false);
         // Check if there are directions for the destination node
-        if (end_floor) {
-            prev_cell = TripSetupActivity.getEnd_path().get(0);
-            x = mapToNewInterval(prev_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
-            y = mapToNewInterval(prev_cell.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
-            end_directions.moveTo(x, y);
-
-            for (int cell_index = 1; cell_index < TripSetupActivity.getEnd_path().size(); cell_index++) {
-                Cell cur = TripSetupActivity.getEnd_path().get(cell_index);
-                x = mapToNewInterval(cur.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
-                y = mapToNewInterval(cur.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
-
-                end_directions.lineTo(x, y);
+        if (end_directions != null) {
+            if (end_floor) {
+                prev_cell = TripSetupActivity.getEnd_path().get(0);
+                x = mapToNewInterval(prev_cell.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+                y = mapToNewInterval(prev_cell.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
                 end_directions.moveTo(x, y);
+
+                for (int cell_index = 1; cell_index < TripSetupActivity.getEnd_path().size(); cell_index++) {
+                    Cell cur = TripSetupActivity.getEnd_path().get(cell_index);
+                    x = mapToNewInterval(cur.getX() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainW(), 0, view_width);
+                    y = mapToNewInterval(cur.getY() * TripSetupActivity.getCellSize(), 0, TripSetupActivity.getMainH(), 0, view_height);
+
+                    if (cell_index < TripSetupActivity.getEnd_path().size() - 1) {
+                        end_directions.lineTo(x + 5, y);
+                        end_directions.moveTo(x + 5, y);
+                    } else {
+                        end_directions.lineTo(x, y + 5);
+                        end_directions.moveTo(x, y + 5);
+                    }
+                }
             }
+        } else {
+            end_directions = new Path();
         }
     }
 
@@ -256,14 +290,12 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
     }
 
     public void clear() {
-        if (start_directions!=null) {
-            start_directions.rewind();
-        }
-        if (end_directions!=null){
-            end_directions.rewind();
-        }
-        this.draw(new Canvas(Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888)));
+        TripSetupActivity.getStart_path().clear();
+        start_directions.reset();
+        TripSetupActivity.getEnd_path().clear();
+        end_directions.reset();
         invalidate();
+        System.gc();
     }
 
     @Override

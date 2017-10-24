@@ -130,6 +130,7 @@ public class TripSetupActivity extends AppCompatActivity implements CancelTripLi
                     public void run() {
                         start_floor_plan_nodes = null;
                         Log.e("TripAct", "Starting thread 1");
+                        System.gc();
                         PrepDepartureMethod();
                     }
                 });
@@ -139,6 +140,7 @@ public class TripSetupActivity extends AppCompatActivity implements CancelTripLi
                     public void run() {
                         Log.e("TripAct", "Starting thread 2");
                         end_floor_plan_nodes = null;
+                        System.gc();
                         try {
                             Thread.sleep(6000);
                         } catch (InterruptedException e) {

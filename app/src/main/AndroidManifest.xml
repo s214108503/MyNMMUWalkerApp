@@ -31,7 +31,7 @@
         <activity
             android:name=".HomeActivity"
             android:configChanges="orientation"
-            android:label=""
+            android:label="Home"
             android:screenOrientation="portrait" />
         <activity android:name=".IndoorMapActivity" />
         <activity

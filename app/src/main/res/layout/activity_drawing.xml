@@ -11,17 +11,22 @@
         class="walker.pack.customviews.AnimationView"
         android:id="@+id/animation_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/include"
+        android:layout_above="@+id/include2" />
     <include
         layout="@layout/indoor_location_section_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/include" />
     <include
         layout="@layout/indoor_instructions_section_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+        android:id="@+id/include2" />
 
 </RelativeLayout>

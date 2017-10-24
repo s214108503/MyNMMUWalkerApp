@@ -2,6 +2,8 @@ package walker.pack;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -78,6 +81,8 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             db = new DatabaseHelper(this);
         }
+
+        actionBarSetup();
 
         // =================================Dummy Data==============================================
         /*db.addBuilding(new Building("4", "Old Mutual Halls", -34.00861, 25.66975));
@@ -159,6 +164,13 @@ public class HomeActivity extends AppCompatActivity {
         db.addEntrance(new Entrance(35, 0, "0", 82.00, 149.00, -34.00874, 25.66947));*/
 
         // =========================================================================================
+    }
+
+    private void actionBarSetup() {
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        if  (ab != null) {
+            ab.setTitle("Home");
+        }
     }
 
     @Override

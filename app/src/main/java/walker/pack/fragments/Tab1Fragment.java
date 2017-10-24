@@ -99,7 +99,7 @@ public class Tab1Fragment extends Fragment{
                     staff_detailed_call_image_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + cur.getPhone()));
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + cur.getPhone()));
                             startActivity(intent);
                         }
                     });

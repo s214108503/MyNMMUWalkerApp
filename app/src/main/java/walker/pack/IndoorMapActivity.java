@@ -248,8 +248,11 @@ public class IndoorMapActivity extends AppCompatActivity {
             if (resultCode==RESULT_OK){
                 boolean close_act = data.getBooleanExtra("close_act", false);
                 if (close_act) {
-                    if (animationView_layout_view != null)
+                    if (animationView_layout_view != null) {
                         animationView_layout_view.clearCanvas = true;
+                        animationView_layout_view.clear();
+                        animationView_layout_view.invalidate();
+                    }
                     //animationView_layout_view = new AnimationView(getBaseContext());
                     listener.OnChangeFloorsCalled("nothing");
                     Intent intent = new Intent(IndoorMapActivity.this, TripSetupActivity.class);
@@ -274,8 +277,11 @@ public class IndoorMapActivity extends AppCompatActivity {
                     Intent intent = new Intent(IndoorMapActivity.this, TripSetupActivity.class);
                     setResult(RESULT_OK, intent);
                     Log.i(TAG, "QR Code Results set to OK");
-                    if (animationView_layout_view != null)
+                    if (animationView_layout_view != null) {
                         animationView_layout_view.clearCanvas = true;
+                        animationView_layout_view.clear();
+                        animationView_layout_view.invalidate();
+                    }
                     finish();
                 }
             }

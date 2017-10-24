@@ -27,14 +27,10 @@ import com.mapzen.android.graphics.model.Marker;
 import com.mapzen.android.routing.MapzenRouter;
 import com.mapzen.model.ValhallaLocation;
 import com.mapzen.tangram.LngLat;
+import com.mapzen.tangram.MapController;
+import com.mapzen.tangram.MapData;
 import com.mapzen.valhalla.Route;
 import com.mapzen.valhalla.RouteCallback;
-
-import org.osmdroid.api.IMapController;
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +98,8 @@ public class OutdoorMapActivity extends AppCompatActivity {
             }
         });
 
+
+
         Log.i(TAG, "router set");
         router = new MapzenRouter(this);
         Log.i(TAG, "router.setWalking mode");
@@ -118,6 +116,13 @@ public class OutdoorMapActivity extends AppCompatActivity {
                         if (map!=null) {
                             if (points.size() > 0)
                                 map.drawRouteLine(points);
+                            //map.addMarker(new Marker(points.get(0).longitude, points.get(0).latitude));
+
+                            com.mapzen.tangram.Marker start_marker = map.getMapController().addMarker();
+                            start_marker.setPoint(new LngLat(points.get(0).longitude, points.get(0).latitude));
+                            start_marker.setVisible(true);
+                            start_marker.setDrawable(getResources().getDrawable(R.drawable.greenflag16, null));
+
                             map.addMarker(new Marker(points.get(0).longitude, points.get(0).latitude));
                             map.addMarker(new Marker(points.get(points.size()-1).longitude, points.get(points.size()-1).latitude));
                         }

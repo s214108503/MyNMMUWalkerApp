@@ -27,7 +27,7 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
     private ArrayList<Staff> staffArrayList, clonedStaffList;
     Context context;
     private boolean isFavourite;
-    private Filter staffSurnameFilter;
+    private Filter staffSurnameFilter, staffNameFilter;
 
     // view lookup cache
     private static class ViewHolder{
@@ -45,6 +45,10 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
         clonedStaffList.addAll(data);
         isFavourite = false;
 
+        staffSurnameFilterInitialisation();
+    }
+
+    private void staffSurnameFilterInitialisation() {
         staffSurnameFilter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
@@ -56,14 +60,22 @@ public class StaffAdapter extends ArrayAdapter<Staff> implements Filterable {
                             staffArrayList.clear();
                             staffArrayList.addAll(clonedStaffList);
                         }
-
+                        // name
                         for (int x = 0; x < staffArrayList.size(); x++) {
                             Staff cur = getItem(x);
                             assert cur != null;
-                            int constraint_index = cur.getSurname().toLowerCase().indexOf(String.valueOf(constraint).toLowerCase());
-                            if (constraint_index != -1)
+                            if (cur.getName().toLowerCase().startsWith(String.valueOf(constraint).toLowerCase()))
                                 temp_list.add(cur);
                         }
+                        // surname
+                        for (int x = 0; x < staffArrayList.size(); x++) {
+                            Staff cur = getItem(x);
+                            assert cur != null;
+                            if (cur.getSurname().toLowerCase().startsWith(String.valueOf(constraint).toLowerCase()))
+                                if (!temp_list.contains(cur))
+                                    temp_list.add(cur);
+                        }
+
                         filter_results.values = temp_list;
                         filter_results.count = temp_list.size();
                     }

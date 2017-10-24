@@ -32,18 +32,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/greenflag16"
+            android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp"/>
+            android:src="@drawable/greenflag16" />
 
         <TextView
             android:id="@+id/indoor_destination_location_text_view"

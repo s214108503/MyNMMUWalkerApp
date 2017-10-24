@@ -13,17 +13,21 @@
         android:id="@+id/map_fragment"
         android:name="com.mapzen.android.graphics.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/include3"
+        android:layout_above="@+id/include4" />
     <include
         layout="@layout/indoor_location_section_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/include3" />
     <include
         layout="@layout/indoor_instructions_section_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+        android:id="@+id/include4" />
 
 </RelativeLayout>

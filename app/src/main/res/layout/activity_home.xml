@@ -20,6 +20,7 @@
         app:srcCompat="@drawable/homebutton2"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+
         android:id="@+id/img_view_home_navigate" />
 
 </RelativeLayout>
